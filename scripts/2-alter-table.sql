@@ -25,6 +25,6 @@
 -- ALTER TABLE customers
 -- DROP COLUMN age;
 
-ALTER TABLE customers
-ADD COLUMN
-age INT DEFAULT 0;
+-- ALTER TABLE customers
+-- ADD COLUMN
+-- age INT DEFAULT 0;
