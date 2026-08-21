@@ -17,14 +17,17 @@
 -- WHERE (id >= 20 OR last_name = 'Doe-1') OR first_name = 'Customer-2'
 -- ;
 
+-- SELECT * FROM customers
+-- WHERE
+--   -- id IN(1, 2, 3)
+--   -- id BETWEEN 12 AND 16
+--   -- id NOT BETWEEN 12 AND 16
+--   -- id NOT IN(1, 2, 3)
+--   -- email IS NULL
+--   -- first_name LIKE '%2%'
+--   first_name ILIKE '%customer%'
+--   -- iLIKE means 'Insensitive LIKE'
+-- ;
+
 SELECT * FROM customers
-WHERE
-  -- id IN(1, 2, 3)
-  -- id BETWEEN 12 AND 16
-  -- id NOT BETWEEN 12 AND 16
-  -- id NOT IN(1, 2, 3)
-  -- email IS NULL
-  -- first_name LIKE '%2%'
-  first_name ILIKE '%customer%'
-  -- iLIKE means 'Insensitive LIKE'
-;
+ORDER BY id;
