@@ -4,13 +4,17 @@
 -- SELECT id, CONCAT(first_name, ' ', last_name) "fullName"
 -- FROM customers;
 
--- a row without email:
-INSERT INTO customers (first_name) VALUES ('Anderson');
+-- a row with an email:
+INSERT INTO customers (first_name, email) VALUES ('Anderson', 'customer.1@email.com');
 
--- how many rows have in the table
-SELECT COUNT(*) total_of_customers
-FROM customers;
+-- -- how many rows are in the table
+-- SELECT COUNT(*) total_of_customers
+-- FROM customers;
 
 -- how many rows have the email column
-SELECT COUNT(email) total_of_customers
+SELECT
+  COUNT(
+    -- the DISTINCT keyword returns unique values from the column
+    DISTINCT email
+  ) total_of_customers
 FROM customers;
