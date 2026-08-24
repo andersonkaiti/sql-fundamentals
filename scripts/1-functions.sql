@@ -21,7 +21,16 @@
 
 -- INSERT INTO orders (customer_id, amount) VALUES (1, 1002);
 
+-- aggregate functions: aggregate data
+-- so, the functions will combine all values into one value.
+-- with the GROUP BY, the data is grouped per customer
 SELECT
-  SUM(amount) "totalRevenue",
-  COUNT(id) "totalOrders"
-FROM orders;
+  customer_id,
+  SUM(amount) total_revenue,
+  COUNT(id) total_orders,
+  MAX(amount) max_order,
+  MIN(amount) min_order,
+  ROUND(AVG(amount), 2) average_ticket
+FROM orders
+GROUP BY customer_id
+;
