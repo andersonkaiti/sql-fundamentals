@@ -11,4 +11,4 @@ const res = await client.query(`
   -- ORDER BY total_revenue DESC
 `)
 
-console.log(res.rows[0].totalRevenue)
+console.log(res.rows)
