@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS customers (
   id SERIAL,
   first_name VARCHAR(20),
   last_name VARCHAR(60),
-  email VARCHAR(256),
+  email VARCHAR(256) NOT NULL,
   created_at TIMESTAMP DEFAULT NOW()
 );
 
@@ -20,7 +20,6 @@ CREATE TABLE IF NOT EXISTS orders (
   customer_id INT,
   amount NUMERIC(7, 2)
 );
-
 
 DO $$
 DECLARE
