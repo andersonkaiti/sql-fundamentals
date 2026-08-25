@@ -1,5 +1,7 @@
 \c sql_fundamentals
 
+DROP VIEW IF EXISTS customers_summary;
+
 -- Views (a.k.a. virtual tables) are named, stored queries you can select from like a table
 CREATE VIEW  customers_summary AS 
   SELECT
@@ -16,3 +18,6 @@ CREATE VIEW  customers_summary AS
 SELECT * FROM customers_summary
 WHERE total_revenue BETWEEN 500 AND 1000
 ORDER BY total_revenue DESC;
+
+SELECT * FROM pg_views
+WHERE viewname = 'customers_summary';
