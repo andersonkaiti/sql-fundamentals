@@ -1,0 +1,21 @@
+{
+  "main": "main.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx --watch ."
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.22.0",
+      "onFail": "download"
+    }
+  },
+  "dependencies": {
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.23.12"
+  }
+}
