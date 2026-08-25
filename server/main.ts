@@ -8,7 +8,7 @@ await client.connect()
 
 const res = await client.query(`
   SELECT * FROM customers_summary
-  ORDER BY total_revenue DESC
+  -- ORDER BY total_revenue DESC
 `)
 
-console.log(res.rows)
+console.log(res.rows[0].totalRevenue)
