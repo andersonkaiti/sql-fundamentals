@@ -27,6 +27,27 @@
 -- ALTER TABLE customers
 -- DROP CONSTRAINT customers_email_key;
 
+ALTER TABLE orders
+-- this ensures the amount's value is equal to or greater than 0, so this
+-- query will fail
+ADD CHECK(amount >= 0);
+
+INSERT INTO orders (customer_id, amount)
+VALUES
+  (10, 10)
+  -- (10, -100)
+;
+
+UPDATE orders
+SET amount = -10
+WHERE id = 1;
+
+ALTER TABLE orders
+DROP CONSTRAINT orders_amount_check;
+
+SELECT * FROM orders
+ORDER BY id DESC;
+
 SELECT constraint_name, constraint_type, table_name
 FROM information_schema.table_constraints
 WHERE table_schema = 'public';

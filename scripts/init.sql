@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS customers (
   first_name VARCHAR(20),
   last_name VARCHAR(60),
   email VARCHAR(256) NOT NULL UNIQUE,
-  created_at TIMESTAMP DEFAULT NOW(),
+  created_at TIMESTAMP DEFAULT NOW()
 
   -- CONSTRAINT customers_email_unique UNIQUE(email)
 );
@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS orders;
 CREATE TABLE IF NOT EXISTS orders (
   id SERIAL,
   customer_id INT,
-  amount NUMERIC(7, 2)
+  amount NUMERIC(7, 2) CHECK (amount >= 0)
 );
 
 DO $$
