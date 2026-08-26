@@ -6,13 +6,14 @@ CREATE DATABASE sql_fundamentals;
 DROP TABLE IF EXISTS customers;
 
 CREATE TABLE IF NOT EXISTS customers (
-  id SERIAL,
+  id SERIAL PRIMARY KEY,
   first_name VARCHAR(20),
   last_name VARCHAR(60),
   email VARCHAR(256) NOT NULL UNIQUE,
   created_at TIMESTAMP DEFAULT NOW()
 
   -- CONSTRAINT customers_email_unique UNIQUE(email)
+  -- PRIMARY KEY(id)
 );
 
 DROP TABLE IF EXISTS orders;
