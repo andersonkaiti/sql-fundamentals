@@ -20,10 +20,12 @@ DROP TABLE IF EXISTS orders;
 
 CREATE TABLE IF NOT EXISTS orders (
   id SERIAL,
-  customer_id INT REFERENCES customers (id),
-  amount NUMERIC(7, 2) CHECK (amount >= 0)
+  customer_id INT,
+  amount NUMERIC(7, 2) CHECK (amount >= 0),
 
   FOREIGN KEY(customer_id) REFERENCES customers(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 DO $$
