@@ -19,17 +19,34 @@
 --   cus.id = ord.customer_id
 -- WHERE cus.id = 9;
 
-INSERT INTO orders (amount)
-VALUES (99);
+-- INSERT INTO orders (amount)
+-- VALUES (99);
 
-SELECT * FROM
-  -- the type of JOIN decides which rows are kept when there's no match:
-  --
-  --   INNER JOIN  -> only rows that match on both sides (the intersection)
-  --   LEFT JOIN   -> all rows from the left table (customers), NULLs on the right
-  --   RIGHT JOIN  -> all rows from the right table (orders), NULLs on the left
-  --   FULL JOIN   -> all rows from both tables, NULLs wherever there's no match
-  --
+-- SELECT * FROM
+--   -- the type of JOIN decides which rows are kept when there's no match:
+--   --
+--   --   INNER JOIN  -> only rows that match on both sides (the intersection)
+--   --   LEFT JOIN   -> all rows from the left table (customers), NULLs on the right
+--   --   RIGHT JOIN  -> all rows from the right table (orders), NULLs on the left
+--   --   FULL JOIN   -> all rows from both tables, NULLs wherever there's no match
+--   --
+--   customers AS cus LEFT JOIN orders AS ord
+-- ON
+--   cus.id = ord.customer_id;
+
+SELECT
+  cus.*,
+  -- JSON_AGG (JSON aggregate) rolls all the matching order rows of a customer
+  -- into a single JSON array, instead of repeating the customer on every order.
+  JSON_AGG(ord) orders
+FROM
   customers AS cus LEFT JOIN orders AS ord
 ON
-  cus.id = ord.customer_id;
+  cus.id = ord.customer_id
+WHERE
+  cus.id = 10
+-- GROUP BY collapses the joined rows into one row per customer, which is what
+-- lets JSON_AGG gather each customer's orders together.
+GROUP BY
+  cus.id
+;

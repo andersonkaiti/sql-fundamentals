@@ -7,8 +7,17 @@ const client = new Client({
 await client.connect()
 
 const res = await client.query(`
-  SELECT * FROM customers_summary
-  -- ORDER BY total_revenue DESC
+  SELECT
+    cus.*,
+    JSON_AGG(ord) orders
+  FROM
+    customers AS cus LEFT JOIN orders AS ord
+  ON
+    cus.id = ord.customer_id
+  WHERE
+    cus.id = 10
+  GROUP BY
+    cus.id
 `)
 
-console.log(res.rows)
+console.log(res.rows[0])
