@@ -36,15 +36,36 @@
 
 SELECT
   cus.*,
-  -- JSON_AGG (JSON aggregate) rolls all the matching order rows of a customer
-  -- into a single JSON array, instead of repeating the customer on every order.
-  JSON_AGG(ord) orders
+  -- CASE works like a switch: it checks each WHEN branch and returns the first
+  -- one that matches, falling back to ELSE when none does.
+  CASE
+    -- when the customer has at least one order, aggregate them into json.
+    WHEN COUNT(ord.id) > 0 THEN
+      -- JSON_AGG (json aggregate) rolls all the matching order rows of a
+      -- customer into a single json array, instead of repeating the customer
+      -- on every order.
+      JSON_AGG(
+        -- JSON_STRIP_NULLS drops keys whose value is null from each object.
+        JSON_STRIP_NULLS(
+          -- JSON_BUILD_OBJECT builds a json object with the picked columns,
+          -- so we expose only id and amount instead of the whole order row.
+          JSON_BUILD_OBJECT(
+            'id', ord.id,
+            'amount', ord.amount
+          )
+        )
+      )
+    -- no orders: the LEFT JOIN produced nulls, and JSON_STRIP_NULLS would leave
+    -- us with [{}], so return an empty json array instead.
+    ELSE
+      '[]'::JSON
+  END orders
 FROM
   customers AS cus LEFT JOIN orders AS ord
 ON
   cus.id = ord.customer_id
 WHERE
-  cus.id = 10
+  cus.id = 9
 -- GROUP BY collapses the joined rows into one row per customer, which is what
 -- lets JSON_AGG gather each customer's orders together.
 GROUP BY
