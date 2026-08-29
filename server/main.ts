@@ -9,19 +9,17 @@ await client.connect()
 const res = await client.query(`
   SELECT
     cus.*,
-    CASE
-      WHEN COUNT(ord.id) > 0 THEN
-        JSON_AGG(
-          JSON_STRIP_NULLS(
-            JSON_BUILD_OBJECT(
-              'id', ord.id,
-              'amount', ord.amount
-            )
+    NO_EMPTY_OBJECT_ARRAY(
+      COUNT(ord.id),
+      JSON_AGG(
+        JSON_STRIP_NULLS(
+          JSON_BUILD_OBJECT(
+            'id', ord.id,
+            'amount', ord.amount
           )
         )
-      ELSE
-        '[]'::JSON
-    END orders
+      )
+    ) orders
   FROM
     customers AS cus LEFT JOIN orders AS ord
   ON
