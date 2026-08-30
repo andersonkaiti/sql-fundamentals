@@ -7,21 +7,18 @@ DROP TABLE IF EXISTS customers;
 
 CREATE TABLE IF NOT EXISTS customers (
   id SERIAL PRIMARY KEY,
-  first_name VARCHAR(20),
-  last_name VARCHAR(60),
+  first_name VARCHAR(20) NOT NULL,
+  last_name VARCHAR(60) NOT NULL,
   email VARCHAR(256) UNIQUE,
   created_at TIMESTAMP DEFAULT NOW()
-
-  -- CONSTRAINT customers_email_unique UNIQUE(email)
-  -- PRIMARY KEY(id)
 );
 
 DROP TABLE IF EXISTS orders;
 
 CREATE TABLE IF NOT EXISTS orders (
-  id SERIAL,
-  customer_id INT,
-  amount NUMERIC(7, 2) CHECK (amount >= 0),
+  id SERIAL PRIMARY KEY,
+  customer_id INT NOT NULL,
+  amount NUMERIC(7, 2) NOT NULL CHECK (amount >= 0),
 
   FOREIGN KEY(customer_id) REFERENCES customers(id)
     ON UPDATE CASCADE
@@ -47,4 +44,4 @@ BEGIN
   END LOOP;
 
   RAISE NOTICE '% customers succesfully created', created_customers;
-END $$
+END $$;
