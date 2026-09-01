@@ -1,37 +1,34 @@
 import { client } from './db/client'
 import { startTransaction } from './db/start-tx'
 
-await startTransaction(async (tx, createSavepoint) => {
-  await tx.query(
-    `
-      INSERT INTO
-        customers
-      (first_name, last_name)
-        VALUES
-      ($1, $2)
-    `,
-    ['Anderson', 'Kaiti'],
-  )
+await startTransaction(async (tx) => {
+  // pessimistic locking: FOR UPDATE locks the row until the transaction ends,
+  // preventing other transactions from reading/updating the stock in parallel and
+  // avoiding a race condition (e.g. two simultaneous purchases of the last product).
+  const {
+    rows: [row],
+  } = await tx.query(`
+    SELECT
+      quantity
+    FROM
+      products
+    WHERE
+      id = 1
+    FOR UPDATE
+  `)
 
-  await createSavepoint('sp_01', async () => {
-    await tx.query(`
-      UPDATE
-        bank_accounts
-      SET
-        balance = balance - 2000
-      WHERE
-        user_id = 1;  
-    `)
+  if (row.quantity < 1) {
+    throw new Error('Not enough products')
+  }
 
-    await tx.query(`
-      UPDATE
-        bank_accounts
-      SET
-        balance = balance - 2000
-      WHERE
-        user_id = 2;  
-    `)
-  })
+  await tx.query(`
+    UPDATE
+      products
+    SET
+      quantity = quantity - 1
+    WHERE
+      id = 1
+  `)
 })
 
 client.end()
