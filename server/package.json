@@ -2,8 +2,7 @@
   "main": "main.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsx --watch .",
-    "dev:transaction": "tsx --watch transactions.ts"
+    "dev": "tsx --watch ."
   },
   "devEngines": {
     "packageManager": {
