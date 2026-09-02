@@ -2,9 +2,6 @@ import { client } from './db/client'
 import { startTransaction } from './db/start-tx'
 
 await startTransaction(async (tx) => {
-  // pessimistic locking: FOR UPDATE locks the row until the transaction ends,
-  // preventing other transactions from reading/updating the stock in parallel and
-  // avoiding a race condition (e.g. two simultaneous purchases of the last product).
   const {
     rows: [row],
   } = await tx.query(`
@@ -14,21 +11,27 @@ await startTransaction(async (tx) => {
       products
     WHERE
       id = 1
-    FOR UPDATE
   `)
 
   if (row.quantity < 1) {
     throw new Error('Not enough products')
   }
 
-  await tx.query(`
-    UPDATE
-      products
-    SET
-      quantity = quantity - 1
-    WHERE
-      id = 1
-  `)
+  // Decrement the stock by one, but only if the quantity still matches the
+  // value we just read. This optimistic-concurrency check ensures the update
+  // is skipped when another transaction changed the row in the meantime,
+  // preventing a lost update / race condition.
+  await tx.query(
+    `
+      UPDATE
+        products
+      SET
+        quantity = quantity - 1
+      WHERE
+        id = 1 AND quantity = $1
+    `,
+    [row.quantity],
+  )
 })
 
 client.end()
